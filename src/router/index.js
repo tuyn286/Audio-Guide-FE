@@ -20,7 +20,6 @@ const router = createRouter({
 
     // admin view
     { path: '/admin/edit-user', name: 'edit-user', component: () => import('../views/admin/EditUser.vue') },
-    { path: '/register', name: 'register', component: () => import('../views/guest/Register.vue') },
     { path: '/admin', name: 'admin', component: () => import('../views/admin/Home.vue') },
     { path: '/admin/add-user', name: 'add-user', component: () => import('../views/admin/AddUser.vue') },
     { path: '/admin/ve', name: 'admin-ticket', component: () => import('../views/admin/Ticket.vue') },

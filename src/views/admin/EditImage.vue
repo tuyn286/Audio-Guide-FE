@@ -1,14 +1,17 @@
 <script>
 import AdminSideBar from "@/components/AdminSideBar.vue";
+import Spinner from "@/components/Spinner.vue";
 import api from "@/api";
 export default {
   components: {
     AdminSideBar,
+    Spinner,
   },
   data() {
     return {
       maHinhAnh: this.$route.params.maHinhAnh,
       image: {},
+      loading: false,
     };
   },
   methods: {
@@ -21,6 +24,7 @@ export default {
       }
     },
     async editImage() {
+      this.loading = true;
       try {
         await api.put('/hinh-anh/',this.image)
             .then((response) => {
@@ -32,6 +36,9 @@ export default {
             });
       } catch (error) {
         console.error("Error editing image:", error);
+      } 
+      finally {
+        this.loading = false;
       }
     },
   },
@@ -74,7 +81,9 @@ export default {
                         ></textarea> 
                       </div>
                     </div>
+                    <Spinner v-if="loading" />
                     <button
+                      v-else
                       class="btn btn-success float-end mt-3"
                       type="submit"
                     >

@@ -1,5 +1,6 @@
 <script>
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 export default {
     data() {
         return {
@@ -9,10 +10,12 @@ export default {
             },
             fileVn: null,
             fileEn: null,
+            loading: false,
         };
     },
     methods: {
         async addBanGhi() {
+            this.loading = true;
             try {
                 const formData = new FormData();
                 formData.append('banGhi', new Blob([JSON.stringify(this.banGhi)], { type: 'application/json' }));
@@ -31,6 +34,8 @@ export default {
                 }
             } catch (error) {
                 console.error("Error adding record:", error);
+            } finally {
+                this.loading = false;
             }
         },
         handleFileEn(event) {
@@ -77,7 +82,8 @@ export default {
                       <input class="form-control" type="file" @change="handleFileEn" required>
                   </div>
                 </div>
-                <button class="btn btn-success float-end mt-3" type="submit">Thêm bản ghi</button>
+                <Spinner v-if="loading" />
+                <button v-else class="btn btn-success float-end mt-3" type="submit">Thêm bản ghi</button>
               </form>
             </div>
           </div>

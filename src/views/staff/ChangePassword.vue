@@ -65,7 +65,8 @@
                         </span>
                     </div>
                   </div>
-                  <button class="btn btn-success float-end mt-3" type="submit">
+                  <Spinner v-if="loading" />
+                  <button v-else class="btn btn-success float-end mt-3" type="submit">
                     Xác nhận
                   </button>
                 </form>
@@ -80,8 +81,12 @@
 
 <script>
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 import bcrypt from "bcryptjs";
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       passwordConfirm: "",
@@ -91,10 +96,12 @@ export default {
       showPassword1: false,
       showPassword2: false,
       showPassword3: false,
+      loading: false,
     };
   },
   methods: {
     async changePassword() {
+      this.loading = true;
       try {
         if (this.newPassword !== this.passwordConfirm) {
           alert("Mật khẩu không khớp!");
@@ -128,6 +135,9 @@ export default {
         }
       } catch (error) {
         console.error(error);
+      } 
+      finally {
+        this.loading = false;
       }
     },
     async getInfo() {

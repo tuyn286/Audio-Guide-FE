@@ -29,7 +29,8 @@
                     <input class="form-control" type="text" v-model="baiViet.duongDanYoutube" placeholder="VD: https://www.youtube.com/watch?v=taAEQqQogc0" required>
                   </div>
                 </div>
-                  <button class="btn btn-success float-end mt-3" type="submit">Thêm mới</button>
+                  <Spinner v-if="loading" />
+                  <button v-else class="btn btn-success float-end mt-3" type="submit">Thêm mới</button>
               </form>
             </div>
           </div>
@@ -42,18 +43,21 @@
 
 <script>
 import api from '@/api';
+import Spinner from '@/components/Spinner.vue';
 export default {
   data() {
     return {
       baiViet: {
         tieuDe: '',
         noiDung: '',
-        duongDanYoutube: ''
+        duongDanYoutube: '',
+        loading: false,
       }
     }
   },
   methods: {
     async addBlog() {
+      this.loading = true;
       try {
         this.baiViet.duongDanYoutube = this.baiViet.duongDanYoutube.replace('watch?v=', 'embed/');
         await api.post('/bai-viet/', this.baiViet)
@@ -63,6 +67,8 @@ export default {
             })
       } catch (error) {
         console.error(error);
+      } finally {
+        this.loading = false;
       }
     },
   },

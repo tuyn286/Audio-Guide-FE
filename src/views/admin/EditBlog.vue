@@ -29,7 +29,8 @@
                     <input class="form-control" type="text" v-model="baiViet.duongDanYoutube" placeholder="Link youtube" required>
                   </div>
                 </div>
-                  <button class="btn btn-success float-end mt-3" type="submit">Lưu thông tin</button>
+                <Spinner v-if="loading" />
+                  <button v-else class="btn btn-success float-end mt-3" type="submit">Lưu thông tin</button>
               </form>
             </div>
           </div>
@@ -42,15 +43,21 @@
 
 <script>
 import api from '@/api';
+import Spinner from '@/components/Spinner.vue';
 export default {
+  components: {
+    Spinner
+  },
   data() {
     return {
         maBaiViet: this.$route.params.maBaiViet,
-      baiViet: {}
+      baiViet: {},
+      loading: false,
     }
   },
   methods: {
     async editBlog() {
+      this.loading = true;
       try {
         await api.put('/bai-viet/', this.baiViet)
             .then(response => {
@@ -59,6 +66,9 @@ export default {
             })
       } catch (error) {
         console.error(error);
+      } 
+      finally {
+        this.loading = false;
       }
     },
     async getBlog() {

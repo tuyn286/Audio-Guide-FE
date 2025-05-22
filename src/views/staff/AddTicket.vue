@@ -64,7 +64,8 @@
                       />
                     </div>
                   </div>
-                  <button class="btn btn-success float-end mt-3 px-5" type="submit">
+                  <Spinner v-if="loading" />
+                  <button v-else class="btn btn-success float-end mt-3 px-5" type="submit">
                     Tạo
                   </button>
                 </form>
@@ -79,7 +80,11 @@
 
 <script>
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       tongTien: "",
@@ -100,6 +105,7 @@ export default {
         this.soLuong--;
     },
     async addHoaDon() {
+      this.loading = true;
       try {
         const response = await api.post(
           "/ve/",
@@ -123,6 +129,8 @@ export default {
         document.body.removeChild(link);
       } catch (error) {
         console.error(error);
+      } finally {
+        this.loading = false;
       }
     },
     async getNhanVien() {

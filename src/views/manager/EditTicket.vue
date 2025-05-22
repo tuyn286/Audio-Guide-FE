@@ -1,10 +1,15 @@
 <script>
 import api from '@/api'
+import Spinner from '@/components/Spinner.vue'
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       ticket: {},
       maVe: this.$route.params.maVe,
+      loading: false,
     }
   },
   methods: {
@@ -18,6 +23,7 @@ export default {
       }
     },
     async editTicket() {
+      this.loading = true
       try {
         const response = await api.put('/ve/', this.ticket)
         if (response.status === 200) {
@@ -28,6 +34,9 @@ export default {
         }
       } catch (error) {
         console.error('Error updating ticket:', error)
+      } 
+      finally {
+        this.loading = false
       }
     },
   },
@@ -68,7 +77,8 @@ export default {
                   <option value="Tien mat">Tiền mặt</option>
                   <option value="Quet the">Quẹt thẻ</option>
                 </select>
-                  <button class="btn btn-success float-end mt-3" type="submit">Lưu thông tin</button>
+                <Spinner v-if="loading" />
+                  <button v-else class="btn btn-success float-end mt-3" type="submit">Lưu thông tin</button>
               </form>
             </div>
           </div>

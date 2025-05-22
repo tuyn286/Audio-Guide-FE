@@ -50,7 +50,8 @@
                         >
                     </div>
                 </div>
-                <button type="submit" class="btn btn-success float-end mt-3">Lưu thông tin</button>
+                <Spinner v-if="loading" />
+                <button v-else type="submit" class="btn btn-success float-end mt-3">Lưu thông tin</button>
             </form>
         </div>
     </div>
@@ -58,15 +59,21 @@
 
 <script>
 import api from '@/api';
+import Spinner from '@/components/Spinner.vue';
 export default {
     name: "EditSiteView",
+    components: {
+        Spinner,
+    },
     data() {
         return {
             site: {},
+            loading: false,
         };
     },
     methods: {
         handleSubmit() {
+            this.loading = true;
             try {
                 api.put('/khu-du-lich/sua-thong-tin', this.site)
                     .then(response => {
@@ -82,6 +89,9 @@ export default {
                     });
             } catch (error) {
                 console.error('Error updating site data:', error);
+            } 
+            finally {
+                this.loading = false;
             }
         },
     },

@@ -29,7 +29,8 @@
                     <input class="form-control" type="text" v-model="matKhau" placeholder="Vui lòng nhập mật khẩu" required>
                   </div>
                 </div>
-                  <button class="btn btn-success float-end mt-3" type="submit">Thêm mới</button>
+                <Spinner v-if="loading" />
+                  <button v-else class="btn btn-success float-end mt-3" type="submit">Thêm mới</button>
               </form>
             </div>
           </div>
@@ -42,16 +43,19 @@
 
 <script>
 import api from '@/api';
+import Spinner from '@/components/Spinner.vue';
 export default {
   data() {
     return {
       tenNhanVien: '',
       tenDangNhap: '',
-        matKhau: ''
+      matKhau: '',
+      loading: false,
     }
   },
   methods: {
     async addStaff() {
+      this.loading = true;
       try {
         await api.post('/nhan-vien/',{
             tenNhanVien: this.tenNhanVien,
@@ -64,6 +68,8 @@ export default {
             })
       } catch (error) {
         console.error(error);
+      } finally {
+        this.loading = false;
       }
     },
   },

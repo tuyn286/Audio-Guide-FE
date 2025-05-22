@@ -58,8 +58,8 @@
                           ></i>
                         </span>
                       </div>
-
-                      <div class="pt-1 mb-4">
+                      <Spinner v-if="loading" />
+                      <div class="pt-1 mb-4" v-else>
                         <button
                           data-mdb-button-init
                           data-mdb-ripple-init
@@ -93,23 +93,28 @@
 
 <script>
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       username: "",
       password: "",
       msg: "",
-      showPassword: false
+      showPassword: false,
+      loading: false,
     };
   },
   methods: {
     async handleLogin() {
+      this.loading = true;
       try {
         const response = await api.post("/auth/generateToken", {
           username: this.username,
           password: this.password,
         });
-
         const data = response.data;
         localStorage.setItem("access_token", data);
         this.$router.push({ name: "trang-chu" }).then(() => {
@@ -118,6 +123,8 @@ export default {
       } catch (error) {
         this.msg = "Tên đăng nhập hoặc mật khẩu không đúng!";
         console.error("Error during login:", error);
+      } finally {
+        this.loading = false;
       }
     },
     togglePassword() {

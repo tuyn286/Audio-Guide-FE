@@ -1,6 +1,10 @@
 <script>
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       maKhuDuLich: this.$route.params.maKhuDuLich,
@@ -8,6 +12,7 @@ export default {
       comment: "",
       name: "",
       warning: "",
+      loading: false,
     };
   },
   methods: {
@@ -18,6 +23,7 @@ export default {
       if (this.containsBadWords(this.comment)) {
         this.warning = "Bình luận chứa từ ngữ không phù hợp!";
       } else {
+        this.loading = true;
         try {
           const response = await api.post("/danh-gia/", {
             maKhuDuLich: this.maKhuDuLich,
@@ -33,6 +39,8 @@ export default {
           }
         } catch (error) {
           console.error("Error submitting feedback:", error);
+        } finally {
+          this.loading = false;
         }
       }
     },
@@ -91,8 +99,8 @@ export default {
                 v-model="name"
               />
             </div>
-
-            <button type="submit" class="btn btn-success w-100">
+            <Spinner v-if="loading" />
+            <button type="submit" class="btn btn-success w-100" v-else>
               {{$t('send-fb')}}
             </button>
           </form>

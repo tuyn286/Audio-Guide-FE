@@ -84,8 +84,8 @@ export default {
                             <a href="/scanner" class="btn btn-success" id="qr-code"><i class="fas fa-qrcode"></i></a>
                         </li>
                         <li v-if="isAuthenticated" class="nav-item p-2">
-                            <a v-if="language === 'VN'" @click="changeLanguage("EN")" class="btn btn-danger text-warning fw-bold">VN</a>
-                            <a v-else @click="changeLanguage("VN")" class="btn btn-primary fw-bold">EN</a>
+                            <a v-if="language === 'VN'" @click="changeLanguage('EN')" class="btn btn-danger text-warning fw-bold">VN</a>
+                            <a v-else @click="changeLanguage('VN')" class="btn btn-primary fw-bold">EN</a>
                         </li>
                         <li v-if="isAuthenticated" class="nav-item p-2">
                             <!-- STAFF -->

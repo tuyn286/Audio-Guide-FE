@@ -1,14 +1,20 @@
 <script>
 import api from '@/api';
+import Spinner from '@/components/Spinner.vue';
 export default {
+    components: {
+        Spinner,
+    },
   data() {
     return {
       user: {},
       maTaiKhoan: this.$route.params.maTaiKhoan,   
+      loading: false,
     };
   },
   methods: {
     async editUser() {
+      this.loading = true;
       try {
         await api.put("/tai-khoan/", this.user);
         alert("Chỉnh sửa thành công!");
@@ -16,6 +22,9 @@ export default {
       } catch (error) {
         console.error("Error adding user:", error);
         alert("Chỉnh sửa thất bại!");
+      } 
+      finally {
+        this.loading = false;
       }
     },
     async getUser() {
@@ -107,7 +116,9 @@ export default {
                       <option value="ROLE_STAFF">Nhân viên khu du lịch</option>
                       <option value="ROLE_USER">Người dùng</option>
                     </select>
+                    <Spinner v-if="loading" />
                     <button
+                      v-else
                       type="submit"
                       style="float: right"
                       class="btn btn-success mt-3"

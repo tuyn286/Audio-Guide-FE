@@ -16,7 +16,10 @@
                 </div>
                 <div class="col-md-6 col-lg-7 d-flex align-items-center">
                   <div class="card-body p-4 p-lg-5 text-black">
-                    <form v-if="this.token === null" @submit.prevent="handleLogin">
+                    <form
+                      v-if="this.token === null"
+                      @submit.prevent="handleLogin"
+                    >
                       <div class="d-flex align-items-center mb-3 pb-1">
                         <span class="h1 fw-bold mb-0">Thuyết minh tự động</span>
                       </div>
@@ -41,7 +44,9 @@
                       </div>
 
                       <div class="pt-1 mb-4">
+                        <Spinner v-if="loading" />
                         <button
+                          v-else
                           data-mdb-button-init
                           data-mdb-ripple-init
                           class="btn btn-dark btn-lg btn-block"
@@ -85,7 +90,9 @@
                       </div>
 
                       <div class="pt-1 mb-4">
+                        <Spinner v-if="loading" />
                         <button
+                          v-else
                           data-mdb-button-init
                           data-mdb-ripple-init
                           class="btn btn-dark btn-lg btn-block"
@@ -107,53 +114,66 @@
 </template>
 
 <script>
-import api from '@/api';
+import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
-      email: '',
-      newPassword: '',
-      newPasswordConfirm: '',
+      email: "",
+      newPassword: "",
+      newPasswordConfirm: "",
       token: this.$route.params.token || null,
-    }
+      loading: false,
+    };
   },
   methods: {
     async handleLogin() {
-        try {
-        const response = await api.get('/tai-khoan/quen-mat-khau', {
+      this.loading = true;
+      try {
+        const response = await api.get("/tai-khoan/quen-mat-khau", {
           params: {
             email: this.email,
           },
         });
 
         if (response.status !== 200) {
-          throw new Error('Failed');
+          throw new Error("Failed");
         }
         alert(response.data);
-    } catch (error) {
-        console.error('Error:', error);
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        this.loading = false;
       }
     },
     async changePassword() {
-        if (this.newPassword !== this.newPasswordConfirm) {
-          alert('Mật khẩu không khớp!');
-          return;
-        }
-        localStorage.setItem('access_token', this.token);
-        try {
-          const response = await api.post('/tai-khoan/doi-mat-khau?password='+this.newPassword);
+      this.loading = true;
+      if (this.newPassword !== this.newPasswordConfirm) {
+        alert("Mật khẩu không khớp!");
+        return;
+      }
+      localStorage.setItem("access_token", this.token);
+      try {
+        const response = await api.post(
+          "/tai-khoan/doi-mat-khau?password=" + this.newPassword
+        );
 
-          if (response.status !== 200) {
-            throw new Error('Failed');
-          }
-          alert("Đặt lại mật khẩu thành công!");
-          this.$router.push({name: 'login'}).then(() => {
-            window.location.reload();
-          });
-        } catch (error) {
-          console.error('Error:', error);
+        if (response.status !== 200) {
+          throw new Error("Failed");
         }
-      },
+        alert("Đặt lại mật khẩu thành công!");
+        this.$router.push({ name: "login" }).then(() => {
+          window.location.reload();
+        });
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        this.loading = false;
+      }
+    },
   },
-}
+};
 </script>

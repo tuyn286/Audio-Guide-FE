@@ -20,7 +20,7 @@ export default {
         console.log('Decoded string:', detectedCodes)
         if (this.decode.includes('/qr-auth/validate')) {
           const response = await api.get(this.decode)
-          if (response.status !== 200) {
+          if (response.status !== 200 || response.data === "") {
             throw new Error('Login failed '+ response.status);
           }
           const data = response.data;

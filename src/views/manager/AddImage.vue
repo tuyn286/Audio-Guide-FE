@@ -1,9 +1,11 @@
 <script>
 import ManagerSideBar from "@/components/ManagerSideBar.vue";
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 export default {
   components: {
     ManagerSideBar,
+    Spinner,
   },
   data() {
     return {
@@ -12,10 +14,13 @@ export default {
         moTa: "",
       },
       file: null,
+      previewUrl: null,
+      loading: false,
     };
   },
   methods: {
     async addImage() {
+      this.loading = true;
       try {
         const formData = new FormData();
         formData.append(
@@ -32,10 +37,13 @@ export default {
         this.$router.push({ name: "manager-image" });
       } catch (error) {
         console.error("Error add image:", error);
+      } finally {
+        this.loading = false;
       }
     },
     handleFile(event) {
       this.file = event.target.files[0];
+      this.previewUrl = URL.createObjectURL(file);
     },
   },
 };
@@ -43,13 +51,21 @@ export default {
 <template>
   <main>
     <div class="container mt-2 mb-5">
-      <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb" class="ps-1 pt-1">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><router-link :to="{name: 'manager'}">Quản lý</router-link></li>
-        <li class="breadcrumb-item"><router-link :to="{name: 'manager-image'}">Hình ảnh</router-link></li>
-        <li class="breadcrumb-item active" aria-current="page">Thêm mới</li>
-      </ol>
-    </nav>
+      <nav
+        style="--bs-breadcrumb-divider: '>'"
+        aria-label="breadcrumb"
+        class="ps-1 pt-1"
+      >
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <router-link :to="{ name: 'manager' }">Quản lý</router-link>
+          </li>
+          <li class="breadcrumb-item">
+            <router-link :to="{ name: 'manager-image' }">Hình ảnh</router-link>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Thêm mới</li>
+        </ol>
+      </nav>
       <div class="row mt-3">
         <div class="col-3 border-end">
           <ManagerSideBar />
@@ -91,9 +107,18 @@ export default {
                           @change="handleFile"
                           required
                         />
+                        <div v-if="previewUrl" class="mt-3">
+                          <img
+                            :src="previewUrl"
+                            alt="Preview"
+                            style="max-width: 300px"
+                          />
+                        </div>
                       </div>
                     </div>
+                    <Spinner v-if="loading" />
                     <button
+                      v-else
                       class="btn btn-success float-end mt-3"
                       type="submit"
                     >

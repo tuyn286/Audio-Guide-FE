@@ -1,10 +1,15 @@
 <script>
 import api from '@/api';
+import Spinner from '@/components/Spinner.vue';
 export default {
+    components: {
+        Spinner,
+    },
     data(){
         return {
             record: {},
             maBanGhi: this.$route.params.maBanGhi,
+            loading: false,
         }
     },
     methods: {
@@ -17,12 +22,16 @@ export default {
             }
         },
         async editBanGhi() {
+          this.loading = true;
             try {
                 await api.put('/ban-ghi/', this.record);
                 alert("Cập nhật bản ghi thành công!");
                 this.$router.push({ name: "manager-record" });
             } catch (error) {
                 console.error("Error updating record:", error);
+            } 
+            finally {
+                this.loading = false;
             }
         },
     },
@@ -66,7 +75,8 @@ export default {
                     <input class="form-control text-muted" type="text" v-model="record.duongDanVN" readonly>
                   </div>
                 </div>
-                <button class="btn btn-success float-end mt-3" type="submit">Lưu thông tin</button>
+                <Spinner v-if="loading" />
+                <button v-else class="btn btn-success float-end mt-3" type="submit">Lưu thông tin</button>
               </form>
             </div>
           </div>

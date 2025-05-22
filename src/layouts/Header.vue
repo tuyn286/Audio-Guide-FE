@@ -6,8 +6,8 @@ export default {
     data() {
         return {
             isAuthenticated: false,
-            language: '', 
             role: '',
+            language: '',
         }
     },
     methods: {
@@ -17,19 +17,18 @@ export default {
             this.isAuthenticated = false; 
             window.location.href = '/'; 
         },
-        changeLanguage(){
-            const newLanguage = this.language === 'VN' ? 'EN' : 'VN'; 
+        changeLanguage(lang){
             api.post('/tai-khoan/sua-ngon-ngu', null, {
-                    params: { language: newLanguage }
+                    params: { language: lang }
                 })
                 .then(response => {
+                    this.language = lang;
+                    localStorage.setItem('language', lang);
                     console.log('Language changed successfully:', response.data);
                 })
                 .catch(error => {
                     console.error('Error changing language:', error);
                 });
-            this.language = newLanguage;
-            localStorage.setItem('language', this.language);
             window.location.reload();
         }
     },
@@ -85,8 +84,8 @@ export default {
                             <a href="/scanner" class="btn btn-success" id="qr-code"><i class="fas fa-qrcode"></i></a>
                         </li>
                         <li v-if="isAuthenticated" class="nav-item p-2">
-                            <a v-if="language === 'VN'" @click="changeLanguage" class="btn btn-danger text-warning fw-bold">VN</a>
-                            <a v-else @click="changeLanguage" class="btn btn-primary fw-bold">EN</a>
+                            <a v-if="language === 'VN'" @click="changeLanguage("EN")" class="btn btn-danger text-warning fw-bold">VN</a>
+                            <a v-else @click="changeLanguage("VN")" class="btn btn-primary fw-bold">EN</a>
                         </li>
                         <li v-if="isAuthenticated" class="nav-item p-2">
                             <!-- STAFF -->

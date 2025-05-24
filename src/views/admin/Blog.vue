@@ -2,7 +2,6 @@
 import AdminSideBar from "@/components/AdminSideBar.vue";
 import Spinner from "@/components/Spinner.vue";
 import api from "@/api";
-import { ca } from 'element-plus/es/locale';
 export default {
   components: {
     AdminSideBar,

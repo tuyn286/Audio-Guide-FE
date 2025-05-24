@@ -173,7 +173,7 @@ export default {
                     </button>
                   </td>
                   <td>
-                    <Spinner v-if="loading"
+                    <Spinner v-if="loading"/>
                     <button
                       v-else
                       type="button"

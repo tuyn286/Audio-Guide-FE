@@ -29,7 +29,7 @@
                     <input class="form-control" type="text" v-model="matKhau" placeholder="Vui lòng nhập mật khẩu" required>
                   </div>
                 </div>
-                <Spinner v-if="loading" />
+                <Spinner v-if="loading" class="float-end"/>
                   <button v-else class="btn btn-success float-end mt-3" type="submit">Thêm mới</button>
               </form>
             </div>
@@ -45,6 +45,9 @@
 import api from '@/api';
 import Spinner from '@/components/Spinner.vue';
 export default {
+  components: {
+    Spinner
+  },
   data() {
     return {
       tenNhanVien: '',

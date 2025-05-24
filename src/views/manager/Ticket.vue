@@ -1,17 +1,20 @@
 <script>
 import ManagerSideBar from "@/components/ManagerSideBar.vue";
 import api from "@/api";
-import { ref } from 'vue';
+import { ref } from "vue";
+import Spinner from "@/components/Spinner.vue";
 export default {
   components: {
     ManagerSideBar,
+    Spinner,
   },
   data() {
     return {
       page: 0,
       totalPages: 0,
       tickets: [],
-      selectedDate: ref(null)
+      selectedDate: ref(null),
+      loading: false,
     };
   },
   methods: {
@@ -31,19 +34,18 @@ export default {
       if (diffDays < 7) {
         return diffDays === 1 ? "1 ngày trước" : `${diffDays} ngày trước`;
       }
-      
 
       // Nếu quá 7 ngày, hiển thị dạng dd/mm/yyyy
       return date.toLocaleDateString("vi-VN");
     },
     async getTicket() {
       try {
-        const response = await api.get('/ve/', {params: { page: this.page }});
-        this.tickets = response.data.content.map(ticket => {
+        const response = await api.get("/ve/", { params: { page: this.page } });
+        this.tickets = response.data.content.map((ticket) => {
           return {
-             ...ticket,
-              ngayTao: this.formatTimeAgo(ticket.ngayTao)
-          }
+            ...ticket,
+            ngayTao: this.formatTimeAgo(ticket.ngayTao),
+          };
         });
         this.totalPages = response.data.page.totalPages;
       } catch (error) {
@@ -53,13 +55,14 @@ export default {
     onDateChange(date) {
       this.selectedDate = date;
       try {
-        api.get('/ve/', {params: { page: this.page, date: this.selectedDate }})
+        api
+          .get("/ve/", { params: { page: this.page, date: this.selectedDate } })
           .then((response) => {
-            this.tickets = response.data.content.map(ticket => {
+            this.tickets = response.data.content.map((ticket) => {
               return {
                 ...ticket,
-              ngayTao: this.formatTimeAgo(ticket.ngayTao)
-              }
+                ngayTao: this.formatTimeAgo(ticket.ngayTao),
+              };
             });
             this.totalPages = response.data.page.totalPages;
           });
@@ -67,24 +70,29 @@ export default {
         console.error("Error fetching tickets:", error);
       }
     },
-    prePage(){
-            this.page--;
-            this.getTicket();
-        },
-        nextPage(){
-            this.getTicket();
-        },
+    prePage() {
+      this.page--;
+      this.getTicket();
+    },
+    nextPage() {
+      this.getTicket();
+    },
     editTicket(maVe) {
       this.$router.push({ name: "manager-edit-ticket", params: { maVe } });
     },
     deleteTicket(maVe) {
       if (confirm("Bạn có chắc chắn muốn xóa vé này không?")) {
-        api.delete(`/ve/${maVe}`).then(() => {
-          this.getTicket();
-        });
+        try {
+          api.delete(`/ve/${maVe}`).then(() => {
+            this.getTicket();
+          });
+        } catch (error) {
+          console.error("Error deleting ticket:", error);
+        } finally {
+          this.loading = false;
+        }
       }
     },
-    
   },
   created() {
     this.getTicket();
@@ -94,12 +102,20 @@ export default {
 <template>
   <main>
     <div class="container mt-2 mb-5">
-      <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb" class="ps-1 pt-1">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><router-link :to="{name: 'manager'}">Quản lý</router-link></li>
-        <li class="breadcrumb-item active" aria-current="page">Vé thuyết minh</li>
-      </ol>
-    </nav>
+      <nav
+        style="--bs-breadcrumb-divider: '>'"
+        aria-label="breadcrumb"
+        class="ps-1 pt-1"
+      >
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <router-link :to="{ name: 'manager' }">Quản lý</router-link>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Vé thuyết minh
+          </li>
+        </ol>
+      </nav>
       <div class="row mt-3">
         <div class="col-3 border-end">
           <ManagerSideBar />
@@ -133,10 +149,15 @@ export default {
               </thead>
               <tbody>
                 <tr v-for="ticket in tickets" :key="ticket.maVe">
-                  <td>{{ticket.maVe}}</td>
-                  <td>{{ticket.soLuong}}</td>
-                  <td>{{(ticket.soLuong * ticket.giaVe).toLocaleString('vn-VN')+'đ'}}</td>
-                  <td>{{ticket.ngayTao}}</td>
+                  <td>{{ ticket.maVe }}</td>
+                  <td>{{ ticket.soLuong }}</td>
+                  <td>
+                    {{
+                      (ticket.soLuong * ticket.giaVe).toLocaleString("vn-VN") +
+                      "đ"
+                    }}
+                  </td>
+                  <td>{{ ticket.ngayTao }}</td>
                   <td>
                     <button
                       type="button"
@@ -147,7 +168,9 @@ export default {
                     </button>
                   </td>
                   <td>
+                    <Spinner v-if="loading" />
                     <button
+                      v-else
                       type="button"
                       class="btn btn-danger btn-sm btn-rounded"
                       @click.prevent="deleteTicket(ticket.maVe)"

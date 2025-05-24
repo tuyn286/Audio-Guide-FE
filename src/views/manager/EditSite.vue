@@ -50,7 +50,7 @@
                         >
                     </div>
                 </div>
-                <Spinner v-if="loading" />
+                <Spinner v-if="loading" class="float-end"/>
                 <button v-else type="submit" class="btn btn-success float-end mt-3">Lưu thông tin</button>
             </form>
         </div>

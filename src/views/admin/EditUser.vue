@@ -116,7 +116,7 @@ export default {
                       <option value="ROLE_STAFF">Nhân viên khu du lịch</option>
                       <option value="ROLE_USER">Người dùng</option>
                     </select>
-                    <Spinner v-if="loading" />
+                    <Spinner v-if="loading" class="float-end"/>
                     <button
                       v-else
                       type="submit"

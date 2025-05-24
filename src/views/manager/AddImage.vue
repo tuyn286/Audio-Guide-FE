@@ -43,7 +43,7 @@ export default {
     },
     handleFile(event) {
       this.file = event.target.files[0];
-      this.previewUrl = URL.createObjectURL(file);
+      this.previewUrl = URL.createObjectURL(this.file);
     },
   },
 };
@@ -116,7 +116,7 @@ export default {
                         </div>
                       </div>
                     </div>
-                    <Spinner v-if="loading" />
+                    <Spinner v-if="loading" class="float-end"/>
                     <button
                       v-else
                       class="btn btn-success float-end mt-3"

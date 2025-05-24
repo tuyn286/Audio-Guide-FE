@@ -55,7 +55,7 @@ export default {
     }
   },
   startFrontCamera () {
-    this.facingMode = 'user'
+    this.facingMode = this.facingMode==='user'? 'environment' : 'user'
   },
 }
 }   
@@ -69,7 +69,7 @@ export default {
               <div class="col-sm-4 col-lg-4 mt-2 p-3">
                 <QrcodeStream  @error="onError" @detect="onDetect" :constraints="{ facingMode }" class="p-4 qrcode-stream"></QrcodeStream>
               </div>
-                <button @click="startFrontCamera" type="button" class="btn btn-outline-success mt-3 fw-bold text-white">{{$t('qr-cam')}}</button>
+                <button @click="startFrontCamera" type="button" class="btn btn-outline-success mt-3 fw-bold text-white"><i class="fa-solid fa-rotate"></i></button>
             </div>
         </section>
     </main>

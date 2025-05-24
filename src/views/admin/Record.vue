@@ -1,22 +1,28 @@
 <script>
 import AdminSideBar from "@/components/AdminSideBar.vue";
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
+import { ca } from "element-plus/es/locale";
 export default {
   components: {
     AdminSideBar,
+    Spinner,
   },
   data() {
     return {
       page: 0,
       totalPages: 0,
       records: [],
-      searchText: '',
+      searchText: "",
+      loading: false,
     };
   },
   methods: {
     async getRecord() {
       try {
-        const response = await api.get('/ban-ghi/', {params: { page: this.page }});
+        const response = await api.get("/ban-ghi/", {
+          params: { page: this.page },
+        });
         this.records = response.data.content;
         this.totalPages = response.data.page.totalPages;
       } catch (error) {
@@ -25,41 +31,51 @@ export default {
     },
     search() {
       try {
-        api.get('/ban-ghi/', { params: { page: this.page, text: this.searchText } })
+        api
+          .get("/ban-ghi/", {
+            params: { page: this.page, text: this.searchText },
+          })
           .then((response) => {
             this.records = response.data.content;
             this.totalPages = response.data.page.totalPages;
           });
       } catch (error) {
-        console.error('Error searching records:', error);
+        console.error("Error searching records:", error);
       }
     },
-    prePage(){
-            this.page--;
-            if(this.searchText !== ''){
-                this.search();
-            }
-            this.getRecord();
-        },
-    nextPage(){
-            this.page++;
-            if(this.searchText !== ''){
-                this.search();
-            }
-            this.getRecord();
-        },
+    prePage() {
+      this.page--;
+      if (this.searchText !== "") {
+        this.search();
+      }
+      this.getRecord();
+    },
+    nextPage() {
+      this.page++;
+      if (this.searchText !== "") {
+        this.search();
+      }
+      this.getRecord();
+    },
     editRecord(maBanGhi) {
       this.$router.push({ name: "admin-edit-record", params: { maBanGhi } });
     },
     deleteRecord(maBanGhi) {
       if (confirm("Bạn có chắc chắn muốn xóa bản ghi này không?")) {
-        api.delete(`/ban-ghi/${maBanGhi}`).then(() => {
-          this.getRecord();
-        });
+        this.loading = true;
+        try {
+          api.delete(`/ban-ghi/${maBanGhi}`).then(() => {
+            this.getRecord();
+          });
+        } catch (error) {
+          console.error("Error deleting record:", error);
+        } finally {
+          this.loading = false;
+        }
       }
     },
     seeQR(maQR) {
-      window.open(maQR, '_blank');
+      window.open(maQR, "_blank");
     },
   },
   created() {
@@ -70,12 +86,20 @@ export default {
 <template>
   <main>
     <div class="container mt-2 mb-5">
-      <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb" class="ps-1 pt-1">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><router-link :to="{name: 'admin'}">Quản lý</router-link></li>
-        <li class="breadcrumb-item active" aria-current="page">Bản ghi thuyết minh</li>
-      </ol>
-    </nav>
+      <nav
+        style="--bs-breadcrumb-divider: '>'"
+        aria-label="breadcrumb"
+        class="ps-1 pt-1"
+      >
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <router-link :to="{ name: 'admin' }">Quản lý</router-link>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Bản ghi thuyết minh
+          </li>
+        </ol>
+      </nav>
       <div class="row mt-3">
         <div class="col-3 border-end">
           <AdminSideBar />
@@ -83,7 +107,7 @@ export default {
         <div class="col-9">
           <div class="row">
             <div class="col-6">
-                <!-- <button class="btn btn-success" @click="redirectAddRecord">Thêm bản ghi</button> -->
+              <!-- <button class="btn btn-success" @click="redirectAddRecord">Thêm bản ghi</button> -->
             </div>
             <div class="col-6">
               <div class="d-flex">
@@ -126,10 +150,10 @@ export default {
               </thead>
               <tbody>
                 <tr v-for="record in records" :key="record.maBanGhi">
-                  <td>{{record.maBanGhi}}</td>
-                  <td>{{record.khuDuLich.tenKhuDuLich}}</td>
-                  <td>{{record.tenBanGhi}}</td>
-                  <td>{{record.soLuongTruyCap}}</td>
+                  <td>{{ record.maBanGhi }}</td>
+                  <td>{{ record.khuDuLich.tenKhuDuLich }}</td>
+                  <td>{{ record.tenBanGhi }}</td>
+                  <td>{{ record.soLuongTruyCap }}</td>
                   <td>
                     <button
                       type="button"
@@ -149,7 +173,9 @@ export default {
                     </button>
                   </td>
                   <td>
+                    <Spinner v-if="loading"
                     <button
+                      v-else
                       type="button"
                       class="btn btn-danger btn-sm btn-rounded"
                       @click.prevent="deleteRecord(record.maBanGhi)"
@@ -160,7 +186,9 @@ export default {
                 </tr>
               </tbody>
             </table>
-            <h4 class="text-danger p-4" v-if="this.records.length === 0">Không tìm thấy kết quả!</h4>
+            <h4 class="text-danger p-4" v-if="this.records.length === 0">
+              Không tìm thấy kết quả!
+            </h4>
           </div>
           <div class="row">
             <div class="row d-flex justify-content-end align-items-end mt-5">

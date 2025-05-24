@@ -25,11 +25,11 @@ export default {
                     this.language = lang;
                     localStorage.setItem('language', lang);
                     console.log('Language changed successfully:', response.data);
+                    window.location.reload();
                 })
                 .catch(error => {
                     console.error('Error changing language:', error);
                 });
-            window.location.reload();
         }
     },
     mounted() {

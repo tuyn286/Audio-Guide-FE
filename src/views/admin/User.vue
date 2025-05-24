@@ -1,9 +1,11 @@
 <script>
 import AdminSideBar from "@/components/AdminSideBar.vue";
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 export default {
   components: {
     AdminSideBar,
+    Spinner,
   },
   data() {
     return {
@@ -12,6 +14,7 @@ export default {
       users: [],
       searchText: "",
       role: "",
+      loading: false,
     };
   },
   methods: {
@@ -58,7 +61,7 @@ export default {
       this.page--;
       if (this.searchText !== "") {
         this.search();
-      }else if (this.role !== "") {
+      } else if (this.role !== "") {
         this.filter(this.role);
       } else {
         this.getUser();
@@ -68,7 +71,7 @@ export default {
       this.page++;
       if (this.searchText !== "") {
         this.search();
-      }else if (this.role !== "") {
+      } else if (this.role !== "") {
         this.filter(this.role);
       } else {
         this.getUser();
@@ -79,16 +82,23 @@ export default {
     },
     deleteUser(maTaiKhoan) {
       if (confirm("Bạn có chắc chắn muốn xóa tài khoản này không?")) {
-        api
-          .delete(`/tai-khoan/${maTaiKhoan}`)
-          .then(() => {
-            alert("Xóa tài khoản thành công!");
-            this.getUser();
-          })
-          .catch((error) => {
-            console.error("Error deleting user:", error);
-            alert("Xóa tài khoản thất bại!");
-          });
+        this.loading = true;
+        try {
+          api
+            .delete(`/tai-khoan/${maTaiKhoan}`)
+            .then(() => {
+              alert("Xóa tài khoản thành công!");
+              this.getUser();
+            })
+            .catch((error) => {
+              console.error("Error deleting user:", error);
+              alert("Xóa tài khoản thất bại!");
+            });
+        } catch (error) {
+          console.error("Error deleting user:", error);
+        } finally {
+          this.loading = false;
+        }
       }
     },
   },
@@ -100,12 +110,18 @@ export default {
 <template>
   <main>
     <div class="container mt-2">
-      <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb" class="ps-1 pt-1">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><router-link :to="{name: 'admin'}">Quản lý</router-link></li>
-        <li class="breadcrumb-item active" aria-current="page">Tài khoản</li>
-      </ol>
-    </nav>
+      <nav
+        style="--bs-breadcrumb-divider: '>'"
+        aria-label="breadcrumb"
+        class="ps-1 pt-1"
+      >
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <router-link :to="{ name: 'admin' }">Quản lý</router-link>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Tài khoản</li>
+        </ol>
+      </nav>
       <div class="row mt-3">
         <div class="col-3 border-end">
           <AdminSideBar />
@@ -127,13 +143,23 @@ export default {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                 Lọc tài khoản
+                  Lọc tài khoản
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" @click="filter('ROLE_MANAGER')">Quản lý</a></li>
-                  <li><a class="dropdown-item" @click="filter('ROLE_STAFF')">Nhân viên</a></li>
                   <li>
-                    <a class="dropdown-item" @click="filter('ROLE_USER')">Người dùng</a>
+                    <a class="dropdown-item" @click="filter('ROLE_MANAGER')"
+                      >Quản lý</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" @click="filter('ROLE_STAFF')"
+                      >Nhân viên</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" @click="filter('ROLE_USER')"
+                      >Người dùng</a
+                    >
                   </li>
                 </ul>
               </div>
@@ -196,7 +222,9 @@ export default {
                     </button>
                   </td>
                   <td>
+                    <Spinner v-if="loading" />
                     <button
+                      v-else
                       type="button"
                       class="btn btn-danger btn-sm btn-rounded"
                       @click.prevent="deleteUser(user.maTaiKhoan)"
@@ -207,7 +235,9 @@ export default {
                 </tr>
               </tbody>
             </table>
-            <h4 class="text-danger p-4" v-if="this.users.length === 0">Không tìm thấy kết quả!</h4>
+            <h4 class="text-danger p-4" v-if="this.users.length === 0">
+              Không tìm thấy kết quả!
+            </h4>
           </div>
           <div class="row">
             <div class="row d-flex justify-content-end align-items-end mt-5">

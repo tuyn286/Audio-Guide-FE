@@ -98,7 +98,7 @@ export default {
                 </div>
                 <p class="mt-2">Tổng tiền: <span class="text-danger fw-bold fs-4">{{tongTien + 'đ'}}</span></p>
                 <p class="mt-2">Ngày tạo: {{this.formatTimeAgo(ticket.ngayTao)}}</p>
-                <Spinner v-if="loading" />
+                <Spinner v-if="loading" class="float-end"/>
                   <button v-else class="btn btn-success float-end mt-3" type="submit">Lưu thông tin</button>
               </form>
             </div>

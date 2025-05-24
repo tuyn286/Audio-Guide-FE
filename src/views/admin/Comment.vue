@@ -1,22 +1,26 @@
 <script>
 import AdminSideBar from "@/components/AdminSideBar.vue";
 import api from "@/api";
-import { ref } from 'vue';
+import Spinner from "@/components/Spinner.vue";
 export default {
   components: {
     AdminSideBar,
+    Spinner,
   },
   data() {
     return {
       page: 0,
       totalPages: 0,
       comments: [],
+      loading: false,
     };
   },
   methods: {
     async getComment() {
       try {
-        const response = await api.get('/danh-gia/', {params: { page: this.page }});
+        const response = await api.get("/danh-gia/", {
+          params: { page: this.page },
+        });
         this.comments = response.data.content;
         this.comments = this.comments.map((comment) => {
           return {
@@ -29,18 +33,25 @@ export default {
         console.error("Error fetching comments:", error);
       }
     },
-    prePage(){
-            this.page--;
-            this.getComment();
-        },
-    nextPage(){
-        this.getComment();
+    prePage() {
+      this.page--;
+      this.getComment();
+    },
+    nextPage() {
+      this.getComment();
     },
     deleteComment(maDanhGia) {
       if (confirm("Bạn có chắc chắn muốn xóa đánh giá này không?")) {
-        api.delete(`/danh-gia/${maDanhGia}`).then(() => {
-          this.getComment();
-        });
+        this.loading = true;
+        try {
+          api.delete(`/danh-gia/${maDanhGia}`).then(() => {
+            this.getComment();
+          });
+        } catch (error) {
+          console.error("Error deleting comment:", error);
+        } finally {
+          this.loading = false;
+        }
       }
     },
     formatTimeAgo(dateString) {
@@ -68,12 +79,18 @@ export default {
 <template>
   <main>
     <div class="container mt-2 mb-5">
-      <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb" class="ps-1 pt-1">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><router-link :to="{name: 'admin'}">Quản lý</router-link></li>
-        <li class="breadcrumb-item active" aria-current="page">Đánh giá</li>
-      </ol>
-    </nav>
+      <nav
+        style="--bs-breadcrumb-divider: '>'"
+        aria-label="breadcrumb"
+        class="ps-1 pt-1"
+      >
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <router-link :to="{ name: 'admin' }">Quản lý</router-link>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Đánh giá</li>
+        </ol>
+      </nav>
       <div class="row mt-3">
         <div class="col-3 border-end">
           <AdminSideBar />
@@ -93,13 +110,21 @@ export default {
               </thead>
               <tbody>
                 <tr v-for="comment in comments" :key="comments.maDanhGia">
-                  <td>{{comment.maDanhGia}}</td>
-                  <td>{{comment.binhLuan}}</td>
-                  <td>{{comment.diemSo}}</td>
-                  <td>{{comment.taiKhoan.tenTaiKhoan?comment.taiKhoan.tenTaiKhoan:'Ẩn danh'}}</td>
-                  <td>{{comment.ngayTao}}</td>
+                  <td>{{ comment.maDanhGia }}</td>
+                  <td>{{ comment.binhLuan }}</td>
+                  <td>{{ comment.diemSo }}</td>
                   <td>
+                    {{
+                      comment.taiKhoan.tenTaiKhoan
+                        ? comment.taiKhoan.tenTaiKhoan
+                        : "Ẩn danh"
+                    }}
+                  </td>
+                  <td>{{ comment.ngayTao }}</td>
+                  <td>
+                    <Spinner v-if="loading" />
                     <button
+                      v-else
                       type="button"
                       class="btn btn-danger btn-sm btn-rounded"
                       @click.prevent="deleteComment(comment.maDanhGia)"

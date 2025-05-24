@@ -132,7 +132,7 @@ export default {
                         <option value="ROLE_USER">Người dùng</option>
                       </select>
                     </div>
-                    <Spinner v-if="loading" />
+                    <Spinner v-if="loading" class="float-end"/>
                     <button
                       v-else
                       type="submit"

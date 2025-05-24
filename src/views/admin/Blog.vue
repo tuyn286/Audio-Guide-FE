@@ -1,9 +1,12 @@
 <script>
 import AdminSideBar from "@/components/AdminSideBar.vue";
+import Spinner from "@/components/Spinner.vue";
 import api from "@/api";
+import { ca } from 'element-plus/es/locale';
 export default {
   components: {
     AdminSideBar,
+    Spinner,
   },
   data() {
     return {
@@ -11,6 +14,7 @@ export default {
       totalPages: 0,
       blogs: [],
       searchText: '',
+      loading: false,
     };
   },
   methods: {
@@ -53,9 +57,16 @@ export default {
     },
     deleteBlog(id) {
       if (confirm("Bạn có chắc chắn muốn xóa bài viết này không?")) {
-        api.delete(`/bai-viet/${id}`).then(() => {
+        this.loading = true;
+        try {
+          api.delete(`/bai-viet/${id}`).then(() => {
           this.getBlog();
         });
+        } catch (error) {
+          console.error("Error deleting blog:", error);
+        } finally {
+          this.loading = false;
+        }
       }
     },
     seeBlog(id) {
@@ -151,7 +162,9 @@ export default {
                     </button>
                   </td>
                   <td>
+                    <Spinner v-if="loading"/>
                     <button
+                      v-else
                       type="button"
                       class="btn btn-danger btn-sm btn-rounded"
                       @click.prevent="deleteBlog(blog.maBaiViet)"

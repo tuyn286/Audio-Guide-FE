@@ -77,7 +77,7 @@ export default {
                   <option value="Tien mat">Tiền mặt</option>
                   <option value="Quet the">Quẹt thẻ</option>
                 </select>
-                <Spinner v-if="loading" />
+                <Spinner v-if="loading" class="float-end"/>
                   <button v-else class="btn btn-success float-end mt-3" type="submit">Lưu thông tin</button>
               </form>
             </div>

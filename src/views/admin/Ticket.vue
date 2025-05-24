@@ -1,28 +1,31 @@
 <script>
 import AdminSideBar from "@/components/AdminSideBar.vue";
 import api from "@/api";
-import { ref } from 'vue';
+import Spinner from "@/components/Spinner.vue";
+import { ref } from "vue";
 export default {
   components: {
     AdminSideBar,
+    Spinner,
   },
   data() {
     return {
       page: 0,
       totalPages: 0,
       tickets: [],
-      selectedDate: ref(null)
+      selectedDate: ref(null),
+      loading: false,
     };
   },
   methods: {
     async getTicket() {
       try {
-        const response = await api.get('/ve/', {params: { page: this.page }});
-        this.tickets = response.data.content.map(ticket => {
+        const response = await api.get("/ve/", { params: { page: this.page } });
+        this.tickets = response.data.content.map((ticket) => {
           return {
             ...ticket,
-            ngayTao: this.formatTimeAgo(ticket.ngayTao)
-          }
+            ngayTao: this.formatTimeAgo(ticket.ngayTao),
+          };
         });
         this.totalPages = response.data.page.totalPages;
       } catch (error) {
@@ -32,13 +35,14 @@ export default {
     onDateChange(date) {
       this.selectedDate = date;
       try {
-        api.get('/ve/', {params: { page: this.page, date: this.selectedDate }})
+        api
+          .get("/ve/", { params: { page: this.page, date: this.selectedDate } })
           .then((response) => {
-            this.tickets = response.data.content.map(ticket => {
+            this.tickets = response.data.content.map((ticket) => {
               return {
                 ...ticket,
-                ngayTao: this.formatTimeAgo(ticket.ngayTao)
-              }
+                ngayTao: this.formatTimeAgo(ticket.ngayTao),
+              };
             });
             this.totalPages = response.data.page.totalPages;
           });
@@ -46,22 +50,29 @@ export default {
         console.error("Error fetching tickets:", error);
       }
     },
-    prePage(){
-            this.page--;
-            this.getTicket();
-        },
-        nextPage(){
-            this.page++;
-            this.getTicket();
-        },
+    prePage() {
+      this.page--;
+      this.getTicket();
+    },
+    nextPage() {
+      this.page++;
+      this.getTicket();
+    },
     editTicket(maVe) {
       this.$router.push({ name: "admin-edit-ticket", params: { maVe } });
     },
     deleteTicket(maVe) {
       if (confirm("Bạn có chắc chắn muốn xóa vé này không?")) {
-        api.delete(`/ve/${maVe}`).then(() => {
-          this.getTicket();
-        });
+        this.loading = true;
+        try {
+          api.delete(`/ve/${maVe}`).then(() => {
+            this.getTicket();
+          });
+        } catch (error) {
+          console.error("Error deleting ticket:", error);
+        } finally {
+          this.loading = false;
+        }
       }
     },
     formatTimeAgo(dateString) {
@@ -80,7 +91,6 @@ export default {
       if (diffDays < 7) {
         return diffDays === 1 ? "1 ngày trước" : `${diffDays} ngày trước`;
       }
-      
 
       // Nếu quá 7 ngày, hiển thị dạng dd/mm/yyyy
       return date.toLocaleDateString("vi-VN");
@@ -94,12 +104,20 @@ export default {
 <template>
   <main>
     <div class="container mt-2 mb-5">
-      <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb" class="ps-1 pt-1">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><router-link :to="{name: 'admin'}">Quản lý</router-link></li>
-        <li class="breadcrumb-item active" aria-current="page">Vé thuyết minh</li>
-      </ol>
-    </nav>
+      <nav
+        style="--bs-breadcrumb-divider: '>'"
+        aria-label="breadcrumb"
+        class="ps-1 pt-1"
+      >
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <router-link :to="{ name: 'admin' }">Quản lý</router-link>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Vé thuyết minh
+          </li>
+        </ol>
+      </nav>
       <div class="row mt-3">
         <div class="col-3 border-end">
           <AdminSideBar />
@@ -135,12 +153,14 @@ export default {
               </thead>
               <tbody>
                 <tr v-for="ticket in tickets" :key="ticket.maVe">
-                  <td>{{ticket.maVe}}</td>
-                  <td>{{ticket.khuDuLich.tenKhuDuLich}}</td>
-                  <td>{{ticket.soLuong}}</td>
-                  <td>{{(ticket.giaVe * ticket.soLuong)+'đ'}}</td>
-                  <td>{{ticket.ngayTao}}</td>
-                  <td :class="{'text-success':ticket.trangThai == '1'}">{{ticket.trangThai == '0'?'Đã xóa':'Đã thanh toán'}}</td>
+                  <td>{{ ticket.maVe }}</td>
+                  <td>{{ ticket.khuDuLich.tenKhuDuLich }}</td>
+                  <td>{{ ticket.soLuong }}</td>
+                  <td>{{ ticket.giaVe * ticket.soLuong + "đ" }}</td>
+                  <td>{{ ticket.ngayTao }}</td>
+                  <td :class="{ 'text-success': ticket.trangThai == '1' }">
+                    {{ ticket.trangThai == "0" ? "Đã xóa" : "Đã thanh toán" }}
+                  </td>
                   <td>
                     <button
                       type="button"
@@ -151,7 +171,9 @@ export default {
                     </button>
                   </td>
                   <td>
+                    <Spinner v-if="loading" />
                     <button
+                      v-else
                       type="button"
                       v-if="ticket.trangThai == '1'"
                       class="btn btn-danger btn-sm btn-rounded"
@@ -163,7 +185,9 @@ export default {
                 </tr>
               </tbody>
             </table>
-            <h4 class="text-danger p-4" v-if="this.tickets.length === 0">Không tìm thấy kết quả!</h4>
+            <h4 class="text-danger p-4" v-if="this.tickets.length === 0">
+              Không tìm thấy kết quả!
+            </h4>
           </div>
           <div class="row">
             <div class="row d-flex justify-content-end align-items-end mt-5">

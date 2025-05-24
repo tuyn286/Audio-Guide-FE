@@ -41,7 +41,8 @@
                       />
                     </div>
                   </div>
-                  <button class="btn btn-success float-end mt-3" type="submit">
+                  <Spinner v-if="loading" class="float-end" />
+                  <button v-else class="btn btn-success float-end mt-3" type="submit">
                     Lưu thông tin
                   </button>
                 </form>
@@ -56,7 +57,11 @@
 
 <script>
 import api from "@/api";
+import Spinner from "@/components/Spinner.vue";
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       staff: {
@@ -64,6 +69,7 @@ export default {
         taiKhoan: {
           email: "",
           soDienThoai: "",
+          loading: false,
         },
       },
     };
@@ -80,6 +86,7 @@ export default {
       }
     },
     async editStaff() {
+      this.loading = true;
       try {
         await api.put("/nhan-vien/", this.staff).then((response) => {
           if (response.status === 200) {
@@ -91,6 +98,8 @@ export default {
         });
       } catch (error) {
         console.error(error);
+      } finally {
+        this.loading = false;
       }
     },
   },

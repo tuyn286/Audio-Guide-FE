@@ -1,16 +1,19 @@
 <script>
 import ManagerSideBar from "@/components/ManagerSideBar.vue";
+import Spinner from "@/components/Spinner.vue";
 import api from "@/api";
 export default {
   components: {
     ManagerSideBar,
+    Spinner,
   },
   data() {
     return {
       page: 0,
       totalPages: 0,
       blogs: [],
-      searchText: '',
+      searchText: "",
+      loading: false,
     };
   },
   methods: {
@@ -30,19 +33,20 @@ export default {
       if (diffDays < 7) {
         return diffDays === 1 ? "1 ngày trước" : `${diffDays} ngày trước`;
       }
-      
 
       // Nếu quá 7 ngày, hiển thị dạng dd/mm/yyyy
       return date.toLocaleDateString("vi-VN");
     },
     async getBlog() {
       try {
-        const response = await api.get('/bai-viet/quan-ly', {params: { page: this.page }});
-        this.blogs = response.data.content.map(blog => {
+        const response = await api.get("/bai-viet/quan-ly", {
+          params: { page: this.page },
+        });
+        this.blogs = response.data.content.map((blog) => {
           return {
             ...blog,
-            ngayTao: this.formatTimeAgo(blog.ngayTao)
-          }
+            ngayTao: this.formatTimeAgo(blog.ngayTao),
+          };
         });
         this.totalPages = response.data.page.totalPages;
       } catch (error) {
@@ -51,46 +55,62 @@ export default {
     },
     search() {
       try {
-        api.get('/bai-viet/quan-ly', { params: { page: this.page, text: this.searchText } })
+        api
+          .get("/bai-viet/quan-ly", {
+            params: { page: this.page, text: this.searchText },
+          })
           .then((response) => {
-            this.blogs = response.data.content.map(blog => {
+            this.blogs = response.data.content.map((blog) => {
               return {
                 ...blog,
-                ngayTao: this.formatTimeAgo(blog.ngayTao)
-              }
+                ngayTao: this.formatTimeAgo(blog.ngayTao),
+              };
             });
             this.totalPages = response.data.page.totalPages;
           });
       } catch (error) {
-        console.error('Error searching blogs:', error);
+        console.error("Error searching blogs:", error);
       }
     },
-    prePage(){
-            this.page--;
-            if(this.searchText !== ''){
-                this.search();
-            }
-            this.getBlog();
-        },
-        nextPage(){
-            this.page++;
-            if(this.searchText !== ''){
-                this.search();
-            }
-            this.getBlog();
-        },
+    prePage() {
+      this.page--;
+      if (this.searchText !== "") {
+        this.search();
+      }
+      this.getBlog();
+    },
+    nextPage() {
+      this.page++;
+      if (this.searchText !== "") {
+        this.search();
+      }
+      this.getBlog();
+    },
     editBlog(id) {
-      this.$router.push({ name: "manager-edit-blog", params: { maBaiViet: id } });
+      this.$router.push({
+        name: "manager-edit-blog",
+        params: { maBaiViet: id },
+      });
     },
     deleteBlog(id) {
       if (confirm("Bạn có chắc chắn muốn xóa bài viết này không?")) {
-        api.delete(`/bai-viet/${id}`).then(() => {
-          this.getBlog();
-        });
+        this.loading = true;
+        try {
+          api.delete(`/bai-viet/${id}`).then(() => {
+            this.getBlog();
+          });
+        } catch (error) {
+          console.error("Error deleting blog:", error);
+        } finally {
+          this.loading = false;
+        }
       }
     },
     seeBlog(id) {
-      this.$router.push({ name: "manager-detail-blog", params: { maBaiViet: id } });
+      this.$router.push({
+        name: "manager-detail-blog",
+        params: { maBaiViet: id },
+      });
     },
   },
   created() {
@@ -101,12 +121,18 @@ export default {
 <template>
   <main>
     <div class="container mt-2 mb-5">
-      <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb" class="ps-1 pt-1">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><router-link :to="{name: 'manager'}">Quản lý</router-link></li>
-        <li class="breadcrumb-item active" aria-current="page">Bài viết</li>
-      </ol>
-    </nav>
+      <nav
+        style="--bs-breadcrumb-divider: '>'"
+        aria-label="breadcrumb"
+        class="ps-1 pt-1"
+      >
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <router-link :to="{ name: 'manager' }">Quản lý</router-link>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Bài viết</li>
+        </ol>
+      </nav>
       <div class="row mt-3">
         <div class="col-3 border-end">
           <ManagerSideBar />
@@ -114,7 +140,11 @@ export default {
         <div class="col-9">
           <div class="row">
             <div class="col-6">
-                <router-link class="btn btn-success" :to="{name: 'manager-add-blog'}">Thêm bài viết</router-link>
+              <router-link
+                class="btn btn-success"
+                :to="{ name: 'manager-add-blog' }"
+                >Thêm bài viết</router-link
+              >
             </div>
             <div class="col-6">
               <div class="d-flex">
@@ -158,11 +188,18 @@ export default {
               </thead>
               <tbody>
                 <tr v-for="blog in blogs" :key="blog.maBaiViet">
-                  <td>{{blog.maBaiViet}}</td>
-                  <td>{{blog.tieuDe}}</td>
-                  <td>{{blog.noiDung.substring(0,50)}}</td>
-                  <td>{{blog.duongDanYoutube.substring(30, blog.duongDanYoutube.length)}}</td>
-                  <td>{{blog.ngayTao}}</td>
+                  <td>{{ blog.maBaiViet }}</td>
+                  <td>{{ blog.tieuDe }}</td>
+                  <td>{{ blog.noiDung.substring(0, 50) }}</td>
+                  <td>
+                    {{
+                      blog.duongDanYoutube.substring(
+                        30,
+                        blog.duongDanYoutube.length
+                      )
+                    }}
+                  </td>
+                  <td>{{ blog.ngayTao }}</td>
                   <td>
                     <button
                       type="button"
@@ -182,7 +219,9 @@ export default {
                     </button>
                   </td>
                   <td>
+                    <Spinner v-if="loading" />
                     <button
+                      v-else
                       type="button"
                       class="btn btn-danger btn-sm btn-rounded"
                       @click.prevent="deleteBlog(blog.maBaiViet)"

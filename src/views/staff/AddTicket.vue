@@ -64,7 +64,7 @@
                       />
                     </div>
                   </div>
-                  <Spinner v-if="loading" />
+                  <Spinner v-if="loading" class="float-end"/>
                   <button v-else class="btn btn-success float-end mt-3 px-5" type="submit">
                     Tạo
                   </button>
@@ -90,6 +90,7 @@ export default {
       tongTien: "",
       soLuong: 1,
       nhanVien: {},
+      loading: false,
     };
   },
   computed: {

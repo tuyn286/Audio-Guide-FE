@@ -99,7 +99,7 @@ export default {
                 v-model="name"
               />
             </div>
-            <Spinner v-if="loading" />
+            <Spinner v-if="loading" class="mx-auto"/>
             <button type="submit" class="btn btn-success w-100" v-else>
               {{$t('send-fb')}}
             </button>

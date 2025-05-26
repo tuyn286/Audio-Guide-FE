@@ -39,7 +39,7 @@
                 <i
                   v-for="n in 5"
                   :key="n"
-                  :class="getStarClass(n)"
+                  :class="getStarClass(n, site.diemDanhGia)"
                 ></i>
                 <span class="ms-2">{{ site.diemDanhGia.toFixed(1) }}</span>
               </div>
@@ -78,8 +78,7 @@ export default {
         console.error("Error fetching top sites:", error);
       }
     },
-    getStarClass(n) {
-      const score = site.diemDanhGia || 0;
+    getStarClass(n, score) {
       if (n <= Math.floor(score)) {
         return "fa-solid fa-star text-warning";
       } else if (n - score <= 0.75 && n - score >= 0.25) {

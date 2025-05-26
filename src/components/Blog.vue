@@ -48,11 +48,11 @@ export default {
 };
 </script>
 <template>
-  <section class="bg-warning-subtle">
+  <section class="bg-light">
     <div class="container py-5">
       <div class="row text-center py-3">
         <div class="col-lg-6 m-auto border-bottom border-3 border-success">
-          <h1 class="h3 fw-bold">{{ $t("newest-blog") }}</h1>
+          <router-link class="h3 fw-bold text-decoration-none text-dark" :to="{name: 'bai-viet'}">{{ $t("newest-blog") }}</router-link>
         </div>
       </div>
       <div class="row">

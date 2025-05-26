@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="container-lg bg-primary-subtle p-3">
+    <div class="container-lg bg-light p-3">
       <div class="row text-center pt-3">
         <div class="col-lg-6 m-auto border-bottom border-3 border-success">
           <h1 class="h3 fw-bold">{{ $t("top-comment") }}</h1>

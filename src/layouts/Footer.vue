@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-dark mt-5" id="tempaltemo_footer">
+  <footer class="bg-dark" id="tempaltemo_footer">
     <div class="container py-5">
       <div class="row">
         <div class="col-md-6 pt-5">

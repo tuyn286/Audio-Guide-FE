@@ -5,27 +5,28 @@ import Footer from "./layouts/Footer.vue";
 </script>
 
 <template>
-  <Header />
-  <main>
-    <div class="container min-vh-100">
-      <div class="row">
-        <div class="col p-0">
-          <RouterView />
+  <div class="min-vh-100">
+    <Header />
+    <main>
+      <div class="container">
+        <div class="row">
+          <div class="col p-0">
+            <RouterView />
+          </div>
         </div>
+        <button class="floating-btn" @click="$router.push('/scanner')">
+          <i class="fa-solid fa-qrcode"></i>
+        </button>
       </div>
-      <button class="floating-btn" @click="$router.push('/scanner')">
-        <i class="fa-solid fa-qrcode"></i>
-      </button>
-    </div>
-  </main>
+    </main>
+  </div>
   <Footer />
 </template>
 
 <style>
 .floating-btn {
-  
-  display: none ;
-} 
+  display: none;
+}
 
 @media screen and (max-width: 768px) {
   .floating-btn {

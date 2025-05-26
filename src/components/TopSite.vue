@@ -2,7 +2,11 @@
   <section class="container py-5 bg-light">
     <div class="row text-center pt-3">
       <div class="col-lg-6 m-auto border-bottom border-3 border-success">
-        <h1 class="h3 fw-bold">{{ $t("top-site") }}</h1>
+        <router-link
+          class="h3 fw-bold text-decoration-none text-dark"
+          :to="{ name: 'khu-du-lich' }"
+          >{{ $t("top-site") }}</router-link
+        >
       </div>
     </div>
     <div class="row">
@@ -26,30 +30,30 @@
               </span>
               <span class="text1">
                 <i class="fa-solid fa-user"></i>
-                {{site.soLuongKhach}}</span>
+                {{ site.soLuongKhach }}</span
+              >
             </div>
             <div class="cost mt-3 text-dark">
-              <span>{{site.giaVe.toLocaleString('vi-VN')}}VND</span>
+              <span>{{ site.giaVe.toLocaleString("vi-VN") }}VND</span>
               <div class="star mt-3 align-items-center">
                 <i
                   v-for="n in 5"
                   :key="n"
-                  :class="
-                    n <= site.diemDanhGia
-                      ? 'fa-solid fa-star'
-                      : 'fa-regular fa-star'
-                  "
+                  :class="getStarClass(n)"
                 ></i>
+                <span class="ms-2">{{ site.diemDanhGia.toFixed(1) }}</span>
               </div>
             </div>
-          </div> 
-            <div class="p-3 text-center site-button text-white mt-3 cursor bg-success">
-              <router-link
-                :to="/khu-du-lich/ + site.maKhuDuLich"
-                class="text-uppercase btn fs-6 fw-bold" 
-                >{{ $t("detail-btn") }}</router-link
-              >
-            </div>
+          </div>
+          <div
+            class="p-3 text-center site-button text-white mt-3 cursor bg-success"
+          >
+            <router-link
+              :to="/khu-du-lich/ + site.maKhuDuLich"
+              class="text-uppercase btn fs-6 fw-bold"
+              >{{ $t("detail-btn") }}</router-link
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -74,10 +78,19 @@ export default {
         console.error("Error fetching top sites:", error);
       }
     },
+    getStarClass(n) {
+      const score = site.diemDanhGia || 0;
+      if (n <= Math.floor(score)) {
+        return "fa-solid fa-star text-warning";
+      } else if (n - score <= 0.75 && n - score >= 0.25) {
+        return "fa-solid fa-star-half-stroke text-warning";
+      } else {
+        return "fa-regular fa-star text-warning";
+      }
+    },
     bgHinhAnh(site) {
       return (
-        site.hinhAnhList?.filter((hinhAnh) => hinhAnh.loaiAnh === "BG")[0] ||
-        ''
+        site.hinhAnhList?.filter((hinhAnh) => hinhAnh.loaiAnh === "BG")[0] || ""
       );
     },
   },
@@ -101,25 +114,24 @@ export default {
   overflow: hidden;
 }
 .card:hover {
-    transform: translateY(-15px);
-    transition: transform 0.3s ease-in-out;
+  transform: translateY(-15px);
+  transition: transform 0.3s ease-in-out;
 }
 
 .text1 {
-    font-size: 16px;
-    color: #717171;
-
+  font-size: 16px;
+  color: #717171;
 }
 .info {
-    line-height: 17px;
+  line-height: 17px;
 }
 .star {
-    color: #fbc02d
+  color: #fbc02d;
 }
-.cost span{
-    color: #fb3531;
-    font-weight: bold;
-    font-size: 20px;
+.cost span {
+  color: #fb3531;
+  font-weight: bold;
+  font-size: 20px;
 }
 /* .site-button {
     border-radius: 5px;

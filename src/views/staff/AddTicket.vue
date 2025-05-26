@@ -32,6 +32,18 @@
                 <form @submit.prevent="addHoaDon">
                   <div class="row g-3 mb-2">
                     <div class="col-12">
+                      <label for="language">Ngôn ngữ thuyết minh <span class="text-danger">*</span></label>
+                      <select
+                        class="form-select"
+                        id="language"
+                        v-model="ngonNgu"
+                        required
+                      >
+                        <option value="VN" selected>Tiếng Việt</option>
+                        <option value="EN">English</option>
+                      </select>
+                    </div>
+                    <div class="col-12">
                       <label for="">Số lượng vé <span class="text-danger">*</span></label>
                       <div class="row justify-content-start align-items-center">
                         <div class="col-2">
@@ -90,6 +102,7 @@ export default {
       tongTien: "",
       soLuong: 1,
       nhanVien: {},
+      ngonNgu: '',
       loading: false,
     };
   },
@@ -113,6 +126,7 @@ export default {
           {
             giaVe: this.nhanVien.khuDuLich?.giaVe,
             soLuong: this.soLuong,
+            ngonNgu: this.ngonNgu
           },
           {
             responseType: "blob",

@@ -62,7 +62,7 @@ export default {
 </script>
 <template>
     <main>
-        <section class="bg-dark p-0">
+        <section class="bg-dark p-0 pb-2">
           <h4 class="h5 fw-bold pt-4 text-white ps-2 text-uppercase">{{$t('qr')}}</h4>
           <p class="ps-2 text-white fs-6 mb-0">{{$t('qr-des')}}</p>
             <div class="row g-0">

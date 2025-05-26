@@ -12,6 +12,7 @@ const router = createRouter({
     { path: '/bai-viet/:maBaiViet', name: 'bai-viet-detail', component: () => import('../views/guest/DetailBlog.vue'), props: true },
     { path: '/khu-du-lich/:maKhuDuLich', name: 'khu-du-lich-detail', component: () => import('../views/guest/DetailSite.vue'), props: true },
     { path: '/quen-mat-khau/:token?', name: 'forgot-password', component: () => import('../views/guest/ForgotPassword.vue'), props: true },
+    { path: '/qr-auth/validate', name: 'qr-auth', component: () => import('../views/guest/QrAuth.vue') },
 
     // user view
     { path: '/scanner', name: 'scanner', component: () => import('../views/user/Scanner.vue') },

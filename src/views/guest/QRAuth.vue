@@ -16,7 +16,7 @@ export default {
   },
   data() {
     return {
-      token: this.$router.query.token || "",
+      token: '',
       msg: "",
       loading: false,
     };
@@ -44,6 +44,7 @@ export default {
     },
   },
   created() {
+    this.token = this.$route.query.token;
     if (this.token) {
       this.handleLogin();
     } else {

@@ -34,14 +34,14 @@
               >
             </div>
             <div class="cost mt-3 text-dark">
-              <span>{{ site.giaVe.toLocaleString("vi-VN") }}VND</span>
+              <span>{{ site.giaVe.toLocaleString("vi-VN") }}vnđ</span>
               <div class="star mt-3 align-items-center">
                 <i
                   v-for="n in 5"
                   :key="n"
                   :class="getStarClass(n, site.diemDanhGia)"
                 ></i>
-                <span class="ms-2">{{ site.diemDanhGia.toFixed(1) }}</span>
+                <span class="text-dark fs-6 ms-1">{{ site.diemDanhGia.toFixed(1) }}</span>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-content-center align-items-center">
     <div class="col-6">
-      <div class="fw-bold">{{ msg }}</div>
+      <div class="fw-bold fs-3">{{ msg }}</div>
       <Spinner v-if="loading" />
     </div>
   </div>
@@ -16,7 +16,7 @@ export default {
   },
   data() {
     return {
-      token: '',
+      token: "",
       msg: "",
       loading: false,
     };
@@ -34,6 +34,15 @@ export default {
         // Handle successful login, e.g., store token, redirect, etc.
         localStorage.setItem("access_token", data);
         console.log("Login successful", data);
+        // lấy ngôn ngữ, await để chờ language trước khi redirect
+        try {
+          const langRes = await api.get("/tai-khoan/ngon-ngu");
+          this.language = langRes.data;
+          localStorage.setItem("language", this.language);
+        } catch (langError) {
+          console.error("Error fetching language:", langError);
+        }
+        // redirect to home page
         window.location.replace("/");
       } catch (error) {
         this.msg = error.message || "Không thể đăng nhập. (Cannot login)";

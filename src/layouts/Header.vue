@@ -32,7 +32,7 @@ export default {
                 });
         }
     },
-    mounted() {
+    created() {
         const token = localStorage.getItem('access_token'); 
         if (token) {
             // sua bien auth

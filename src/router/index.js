@@ -37,6 +37,7 @@ const router = createRouter({
     { path: '/admin/hinh-anh/:maHinhAnh', name: 'admin-detail-image', component: () => import('../views/admin/DetailImage.vue') },
     { path: '/admin/hinh-anh/chinh-sua/:maHinhAnh', name: 'admin-edit-image', component: () => import('../views/admin/EditImage.vue') },
     { path: '/admin/danh-gia', name: 'admin-comment', component: () => import('../views/admin/Comment.vue') },
+    { path: '/admin/thong-ke', name: 'admin-excel', component: () => import('../views/admin/ExportExcel.vue') },
 
     // manager view
     { path: '/khu-du-lich/chinh-sua', name: 'edit-site', component: () => import('../views/manager/EditSite.vue') },
@@ -57,6 +58,7 @@ const router = createRouter({
     { path: '/quan-ly/nhan-vien', name: 'manager-staff', component: () => import('../views/manager/Staff.vue') },
     { path: '/quan-ly/nhan-vien/them', name: 'manager-add-staff', component: () => import('../views/manager/AddStaff.vue') },
     { path: '/quan-ly/danh-gia', name: 'manager-comment', component: () => import('../views/manager/Comment.vue') },
+    { path: '/quan-ly/thong-ke', name: 'manager-excel', component: () => import('../views/manager/ExportExcel.vue') },
 
 
     // staff view

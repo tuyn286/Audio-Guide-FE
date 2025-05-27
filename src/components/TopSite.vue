@@ -39,9 +39,9 @@
                 <i
                   v-for="n in 5"
                   :key="n"
-                  :class="getStarClass(n, site.diemDanhGia)"
+                  :class="getStarClass(n, site.diemDanhGia || 0)"
                 ></i>
-                <span class="text-dark fs-6 ms-1">{{ site.diemDanhGia.toFixed(1) }}</span>
+                <span class="text-dark fs-6 ms-1">{{ site.diemDanhGia != null ? site.diemDanhGia.toFixed(1) : '0' }}</span>
               </div>
             </div>
           </div>
@@ -79,6 +79,7 @@ export default {
       }
     },
     getStarClass(n, score) {
+      if (score == null || score === 0) return 'fa-solid fa-star text-warning';
       if (n <= Math.floor(score)) {
         return "fa-solid fa-star text-warning";
       } else if (n - score <= 0.75 && n - score >= 0.25) {

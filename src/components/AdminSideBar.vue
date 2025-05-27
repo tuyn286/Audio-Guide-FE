@@ -48,6 +48,13 @@ export default {
                 <i class="fa-solid fa-comment pe-3" style="min-width: 40px"></i>Đánh giá
               </router-link>
             </li>
+            <li class="">
+              <router-link :to="{name: 'admin-excel'}"
+                class="text-decoration-none fs-5 text-body d-flex align-items-center" :class="{'active': $route.name === 'admin-excel'}"
+              >
+                <i class="fa-solid fa-file-excel pe-3" style="min-width: 40px"></i>Thống kê
+              </router-link>
+            </li>
           </ul>
     </main>
 </template>

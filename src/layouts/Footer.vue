@@ -29,9 +29,9 @@
         <div class="col-md-6 pt-5">
           <h2 class="h2 text-secondary border-bottom pb-3 border-light">{{$t('other')}}</h2>
           <ul class="list-unstyled text-light footer-link-list">
-            <li><a class="text-decoration-none text-light" href="#">{{$t('nav-1')}}</a></li>
-            <li><a class="text-decoration-none text-light" href="#">{{$t('nav-2')}}</a></li>
-            <li><a class="text-decoration-none text-light" href="#">{{$t('nav-3')}}</a></li>
+            <li><router-link class="text-decoration-none text-light" :to="{name: 'trang-chu'}">{{$t('nav-1')}}</router-link></li>
+            <li><router-link class="text-decoration-none text-light" :to="{name: 'khu-du-lich'}">{{$t('nav-2')}}</router-link></li>
+            <li><router-link class="text-decoration-none text-light" :to="{name: 'bai-viet'}">{{$t('nav-3')}}</router-link></li>
           </ul>
         </div>
       </div>

@@ -5,7 +5,7 @@ import Footer from "./layouts/Footer.vue";
 </script>
 
 <template>
-  <div class="min-vh-100">
+  <div class="min-vh-100 override-min-height">
     <Header />
     <main>
       <div class="container">
@@ -42,6 +42,9 @@ import Footer from "./layouts/Footer.vue";
     background-color: #198754;
     border: none;
     color: #fff;
+  }
+  .min-vh-100.override-min-height {
+    min-height: auto !important;
   }
 }
 </style>

@@ -67,11 +67,11 @@ export default {
                     <textarea class="form-control" type="text" v-model="record.moTa" placeholder="Mô tả" rows=5 required></textarea>
                   </div>
                   <div class="col-12">
-                    <label for="">Đường dẫn mã QR tiếng Anh</label>
+                    <label for="">Đường dẫn file thuyết minh tiếng Anh</label>
                     <input class="form-control text-muted" type="text" v-model="record.duongDanEN" readonly>
                   </div>
                   <div class="col-12">
-                    <label for="">Đường dẫn mã QR tiếng Việt</label>
+                    <label for="">Đường dẫn file thuyết minh tiếng Việt</label>
                     <input class="form-control text-muted" type="text" v-model="record.duongDanVN" readonly>
                   </div>
                 </div>

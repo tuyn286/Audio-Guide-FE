@@ -39,7 +39,7 @@ export default {
         </div>
         <div class="col-9">
           <div class="row">
-            <router-link class="col-3 pb-3">
+            <router-link class="col-3 pb-3" :to="{ name: 'admin-excel' }">
               <div class="card bg-primary text-white border-0">
                 <div class="card-body">
                   <span class="fs-5 ps-0"><i class="fa-solid fa-money-bill-1-wave"></i></span>
@@ -89,7 +89,7 @@ export default {
               </div>
             </router-link>
 
-            <router-link class="col-3 pb-3">
+            <a class="col-3 pb-3" href="#">
               <div class="card bg-danger text-white border-0">
                 <div class="card-body">
                   <span class="fs-5 ps-0"><i class="fa-solid fa-eye"></i></span>
@@ -97,7 +97,7 @@ export default {
                   <p class="fs-4 fw-bold">{{this.dashBoard.luotTruyCap}}</p>
                 </div>
               </div>
-            </router-link>
+            </a>
 
             <router-link class="col-3 pb-3" :to="{ name: 'admin-comment' }">
               <div class="card bg-dark text-white border-0">

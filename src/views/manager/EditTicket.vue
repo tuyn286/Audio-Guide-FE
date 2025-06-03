@@ -13,6 +13,22 @@ export default {
     }
   },
   methods: {
+    formatTimeAgo(dateString) {
+      const now = new Date();
+      const date = new Date(dateString);
+
+      const diffMs = now - date;
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 0) {
+        if (diffHours === 0) return "Vừa xong";
+        return `${diffHours} giờ trước`;
+      }
+
+      if (diffDays === 1) return "1 ngày trước";
+      return `${diffDays} ngày trước`;
+    },
     async getTicket(maVe) {
       try {
         const response = await api.get(`/ve/${maVe}`)
@@ -40,6 +56,12 @@ export default {
       }
     },
   },
+  computed: {
+    tongTien() {
+      const tong = this.ticket.giaVe * this.ticket.soLuong
+      return tong.toLocaleString('vi-VN');
+    }
+  },
   mounted() {
     this.getTicket(this.maVe)
   },
@@ -57,26 +79,25 @@ export default {
       </ol>
     </nav>
       <div class="row d-flex justify-content-center align-items-center">
-        <div class="col-6">
+        <div class="col-lg-6 col-sm-12">
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">Chỉnh sửa vé {{ticket.maVe}}</h4>
+              <p>Khu du lịch: <span class="text-success fw-bold">{{ticket.khuDuLich?.tenKhuDuLich}}</span></p>
+              <p>Được tạo bởi nhân viên: <span class="text-success fw-bold">{{ticket.nhanVien?.tenNhanVien}}</span></p>
               <form @submit.prevent="editTicket">
                 <div class="row g-3 mb-2">
                   <div class="col">
-                    <label for="">Số lượng</label>
+                    <label for="">Số lượng <span class="text-danger">*</span></label>
                     <input class="form-control" type="number" id="quantity" v-model="ticket.soLuong" placeholder="Số lượng" required>
                   </div>
                   <div class="col">
-                    <label for="">Tổng tiền</label>
-                    <input class="form-control" type="number" id="total" v-model="ticket.tongTien" placeholder="Tổng tiền" required>
+                    <label for="">Giá vé <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" id="total" v-model="ticket.giaVe" placeholder="Giá vé" required>
                   </div>
                 </div>
-                <select v-model="ticket.phuongThucThanhToan" class="form-select no-outline" aria-label="Phương thức thanh toán" required>
-                  <option value="Chuyen khoan">Chuyển khoản</option>
-                  <option value="Tien mat">Tiền mặt</option>
-                  <option value="Quet the">Quẹt thẻ</option>
-                </select>
+                <p class="mt-2">Tổng tiền: <span class="text-danger fw-bold fs-4">{{tongTien + 'đ'}}</span></p>
+                <p class="mt-2">Ngày tạo: {{this.formatTimeAgo(ticket.ngayTao)}}</p>
                 <Spinner v-if="loading" class="float-end"/>
                   <button v-else class="btn btn-success float-end mt-3" type="submit">Lưu thông tin</button>
               </form>

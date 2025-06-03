@@ -112,7 +112,7 @@ export default {
                 <div class="card-body">
                   <h5 class="card-title">{{image.loaiAnh}}</h5>
                   <p class="card-text">
-                    {{image.moTa}}
+                    {{image.moTa.substring(0, 50)}}...
                   </p>
                   <p class="card-text text-muted">{{image.ngayTaiLen}}</p>
                   <div class="row">

@@ -60,10 +60,10 @@ export default {
 <template>
     <nav class="navbar navbar-expand-lg navbar-light shadow p-2 pb-3 pt-3">
         <div class="container d-flex justify-content-between align-items-center">
-            <a class="navbar-brand d-flex align-items-center gap-2 text-success fw-bold fs-5 m-0" href="#">
+            <router-link class="navbar-brand d-flex align-items-center gap-2 text-success fw-bold fs-5 m-0" :to="{name: 'trang-chu'}">
                 <i class="fa-solid fa-headphones fs-4"></i>
                 <span class="logo-text">{{$t('name')}}</span>
-            </a>
+            </router-link>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -75,10 +75,10 @@ export default {
                             <a class="nav-link fw-bold" href="/">{{$t('nav-1')}}</a>
                         </li>
                         <li class="nav-item p-2 fw-bold">
-                            <router-link class="nav-link" :to="{name: 'khu-du-lich'}">{{$t('nav-2')}}</router-link>
+                            <a class="nav-link" href="/khu-du-lich">{{$t('nav-2')}}</a>
                         </li>
                         <li class="nav-item p-2 fw-bold">
-                            <router-link class="nav-link" :to="{name: 'bai-viet'}">{{$t('nav-3')}}</router-link>
+                            <a class="nav-link" href="bai-viet">{{$t('nav-3')}}</a>
                         </li>
                         <li class="nav-item p-2">
                             <a href="/scanner" class="btn btn-success" id="qr-code"><i class="fas fa-qrcode"></i></a>

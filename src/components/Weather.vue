@@ -8,8 +8,8 @@
       <div class="col-lg-6 col-sm-12 border-end border-light" id="weather-info">
         <div class="row align-items-center justify-content-center">
           <div class="col-lg-3 col-6">
-            <div class="fw-bold fs-3 text-white">{{$t('w_city')}}</div>
-            <p class="text-white m-0">{{$t('w_country')}}</p>
+            <div class="fw-bold fs-3 text-white">{{ $t("w_city") }}</div>
+            <p class="text-white m-0">{{ $t("w_country") }}</p>
             <p class="text-white m-0">{{ weather.daily.time[0] }}</p>
           </div>
           <div class="col-lg-3 col-6">
@@ -21,25 +21,32 @@
       </div>
       <div class="col-lg-6 col-sm-12 align-items-center justify-content-center">
         <div class="row align-items-center justify-content-center">
-          <div class="col-lg-3 col-6">
-            <p class="text-white fs-4 m-0 mb-1">
+          <div class="col-12">
+            <p class="text-white fs-4 m-0 mb-1 fw-medium">
               {{ $t(weather.hourly.weather_code[this.currentHour].toString()) }}
             </p>
-            <p class="text-white fs-6 m-0">
-              {{ $t("w_humidity") }}:
-              {{ weather.hourly.relative_humidity_2m[this.currentHour] }}%
-            </p>
-            <p class="text-white fs-6">
-              {{ $t("w_rain") }}: {{ weather.hourly.rain[this.currentHour] }}mm
-            </p>
           </div>
-          <div class="col-lg-3 col-6">
-            <p class="text-white m-0">
-              {{ $t("w_max") }}: {{ weather.daily.temperature_2m_max[0] }}°C
-            </p>
-            <p class="text-white m-0">
-              {{ $t("w_min") }}: {{ weather.daily.temperature_2m_min[0] }}°C
-            </p>
+          <div class="col-12">
+            <div class="row align-items-center justify-content-between">
+              <div class="col-6">
+                <p class="text-white fs-6 m-0">
+                  {{ $t("w_humidity") }}:
+                  {{ weather.hourly.relative_humidity_2m[this.currentHour] }}%
+                </p>
+                <p class="text-white fs-6 m-0">
+                  {{ $t("w_rain") }}:
+                  {{ weather.hourly.rain[this.currentHour] }}mm
+                </p>
+              </div>
+              <div class="col-6">
+                <p class="text-white m-0">
+                  {{ $t("w_max") }}: {{ weather.daily.temperature_2m_max[0] }}°C
+                </p>
+                <p class="text-white m-0">
+                  {{ $t("w_min") }}: {{ weather.daily.temperature_2m_min[0] }}°C
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

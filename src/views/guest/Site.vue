@@ -153,11 +153,9 @@ export default {
                   <i
                     v-for="n in 5"
                     :key="n"
-                    :class="getStarClass(n, site.diemDanhGia)"
+                    :class="getStarClass(n, site.diemDanhGia || 0)"
                   ></i>
-                  <span class="text-dark fs-6 ms-1">{{
-                    site.diemDanhGia.toFixed(1)
-                  }}</span>
+                  <span class="text-dark fs-6 ms-1">{{ site.diemDanhGia != null ? site.diemDanhGia.toFixed(1) : '0' }}</span>
                 </div>
               </div>
             </div>

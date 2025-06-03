@@ -3,24 +3,25 @@
     <section>
       <div class="container mt-5 mb-5">
         <div class="row d-flex justify-content-center align-items-center p-5">
-          <div class="col-6">
+          <div class="col-lg-6 col-sm-12">
             <div class="card p-3">
               <div class="card-body">
                 <h4 class="card-title">Đổi mật khẩu</h4>
                 <form @submit.prevent="changePassword">
                   <div class="row g-3 mb-2">
-                    <div class="col-12">
-                      <label for=""
+                    <div class="col-12 position-relative">
+                      <label for="old-password"
                         >Mật khẩu cũ <span class="text-danger">*</span></label
                       >
                       <input
+                        id="old-password"
                         class="form-control"
                         :type="showPassword1 ? 'text' : 'password'"
                         v-model="oldPassword"
                         placeholder="Vui lòng nhập mật khẩu cũ"
                         required
                       />
-                      <span class="toggle-password" @click="togglePassword1">
+                      <span class="toggle-password1" @click="togglePassword1">
                           <i
                             :class="
                               showPassword1 ? 'fas fa-eye-slash' : 'fas fa-eye'
@@ -28,18 +29,19 @@
                           ></i>
                         </span>
                     </div>
-                    <div class="col-12">
-                      <label for=""
+                    <div class="col-12 position-relative">
+                      <label for="new-password"
                         >Mật khẩu mới <span class="text-danger">*</span></label
                       >
                       <input
+                        id="new-password"
                         class="form-control"
                         :type="showPassword2 ? 'text' : 'password'"
                         v-model="newPassword"
                         placeholder="Vui lòng nhập mật khẩu mới"
                         required
                       />
-                      <span class="toggle-password" @click="togglePassword2">
+                      <span class="toggle-password2" @click="togglePassword2">
                           <i
                             :class="
                               showPassword2 ? 'fas fa-eye-slash' : 'fas fa-eye'
@@ -47,16 +49,17 @@
                           ></i>
                         </span>
                     </div>
-                    <div class="col-12">
-                      <label for="">Xác nhận mật khẩu mới <span class="text-danger">*</span></label>
+                    <div class="col-12 position-relative">
+                      <label for="confirm-password">Xác nhận mật khẩu mới <span class="text-danger">*</span></label>
                       <input
+                        id="confirm-password"
                         class="form-control"
                         :type="showPassword3 ? 'text' : 'password'"
                         v-model="passwordConfirm"
                         placeholder="Vui lòng nhập lại mật khẩu mới"
                         required
                       />
-                      <span class="toggle-password" @click="togglePassword3">
+                      <span class="toggle-password3" @click="togglePassword3">
                           <i
                             :class="
                               showPassword3 ? 'fas fa-eye-slash' : 'fas fa-eye'
@@ -166,10 +169,28 @@ export default {
 };
 </script>
 <style scoped>
-.toggle-password {
+.toggle-password1 {
   position: absolute;
-  top: 57%;
-  right: 60px;
+  top: 68%;
+  right: 20px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6c757d;
+  z-index: 2;
+}
+.toggle-password2 {
+  position: absolute;
+  top: 68%;
+  right: 20px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6c757d;
+  z-index: 2;
+}
+.toggle-password3 {
+  position: absolute;
+  top: 68%;
+  right: 20px;
   transform: translateY(-50%);
   cursor: pointer;
   color: #6c757d;

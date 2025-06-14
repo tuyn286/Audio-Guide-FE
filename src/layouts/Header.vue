@@ -14,6 +14,7 @@ export default {
         logout() {
             localStorage.removeItem('access_token'); 
             localStorage.removeItem('language');
+            localStorage.removeItem('login_time');
             this.isAuthenticated = false; 
             window.location.href = '/'; 
         },
@@ -34,7 +35,14 @@ export default {
     },
     created() {
         const token = localStorage.getItem('access_token'); 
-        if (token) {
+        const loginTime = localStorage.getItem('login_time');
+        const maxAge = 24 * 60 * 60 * 1000; // 24h
+        if (token && loginTime) {
+            // vuot qua 24h tu dong logout
+            if (Date.now() - parseInt(loginTime) > maxAge) {
+                this.logout();
+                return;
+            }
             // sua bien auth
             this.isAuthenticated = true;
             // lay ngon ngu user

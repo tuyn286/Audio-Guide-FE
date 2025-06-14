@@ -117,6 +117,8 @@ export default {
         });
         const data = response.data;
         localStorage.setItem("access_token", data);
+        //set thoi gian dang nhap
+        localStorage.setItem("login_time", Date.now());
         this.$router.push({ name: "trang-chu" }).then(() => {
           window.location.reload();
         });

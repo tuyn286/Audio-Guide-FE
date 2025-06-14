@@ -231,7 +231,6 @@ export default {
                               class="form-control"
                               type="file"
                               @change="handleFileVn"
-                              required
                             />
                           </div>
                           <div class="col-12 p-3">
@@ -244,7 +243,6 @@ export default {
                               class="form-control"
                               type="file"
                               @change="handleFileEn"
-                              required
                             />
                           </div>
                         </div>

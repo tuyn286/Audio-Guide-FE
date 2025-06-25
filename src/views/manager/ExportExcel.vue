@@ -85,6 +85,12 @@ export default {
       const params = new URLSearchParams();
       params.append("year", this.year);
       params.append("month", this.month);
+      const monthNow = new Date().getMonth() + 1;
+      if (this.month > monthNow && this.year >= new Date().getFullYear()) {
+        alert("Tháng không hợp lệ.");
+        this.loading = false;
+        return;
+      }
       api
         .get("/excel/manager?" + params.toString(), {
           responseType: "blob",

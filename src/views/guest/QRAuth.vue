@@ -31,9 +31,12 @@ export default {
           throw new Error("Login failed " + response.status);
         }
         const data = response.data;
-        // Handle successful login, e.g., store token, redirect, etc.
+        // set jwt
         localStorage.setItem("access_token", data);
+        //set thoi gian dang nhap
+        localStorage.setItem("login_time", Date.now());
         console.log("Login successful", data);
+        this.msg = "Đăng nhập thành công. (Login successful)";
         // lấy ngôn ngữ, await để chờ language trước khi redirect
         try {
           const langRes = await api.get("/tai-khoan/ngon-ngu");
@@ -45,7 +48,7 @@ export default {
         // redirect to home page
         window.location.replace("/");
       } catch (error) {
-        this.msg = error.message || "Không thể đăng nhập. (Cannot login)";
+        this.msg = "Không thể đăng nhập. (Cannot login)";
         console.error("Login error:", this.msg);
       } finally {
         this.loading = false;

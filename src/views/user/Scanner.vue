@@ -18,19 +18,7 @@ export default {
     async onDetect (detectedCodes) {
         this.decode = detectedCodes[0].rawValue
         console.log('Decoded string:', detectedCodes)
-        if (this.decode.includes('/qr-auth/validate')) {
-          const response = await api.get(this.decode)
-          if (response.status !== 200 || response.data === "") {
-            throw new Error('Login failed '+ response.status);
-          }
-          const data = response.data;
-          // Handle successful login, e.g., store token, redirect, etc.
-          localStorage.setItem('access_token', data);
-          console.log('Login successful', data);
-          window.location.replace('/')
-        } else {
-          window.location.replace(this.decode)
-        }
+        window.location.replace(this.decode)
     },
     onError(error) {
     if (error.name === 'NotAllowedError') {
